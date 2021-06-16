@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, Routes, ɵEmptyOutletComponent } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { RouterComponent } from './router/router.component';
+import { ModalRouterComponent } from './router/modal-router.component';
 
 type namedNavigate = (commands: any[], extras?: NavigationExtras, name?:string) => Promise<boolean>;
 
 export type ModalRouterOptions = {
-  routes? : Routes; 
+  routes? : any[]; 
   outletName : string;
+  cssClass?: string | string[],
+  showBackdrop?:boolean,
+  backdropDismiss?:boolean,
   initialNavigation? : [commands: any[], extras?: NavigationExtras]
 }
-
-type CreateModalRouter = (options: ModalRouterOptions )=>Promise<HTMLIonModalElement>
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ModalRouterController {
  * @param routes a list of routes to load inside modal, if omitted is retrieved from already loaded routes, with outle outletName
  * @param [outletName] must be unique in all router if routes is provided, elsewhere some routes outlet Must match this name
  * @param [initialNavigation] Warning: extra are not scooped to this secondary router
+ * @param [cssClass] a list of class to add to the modal
  * @returns HTMLIonModalElement ready to be presented 
  */
   public async create(opts: ModalRouterOptions):Promise<HTMLIonModalElement>{
@@ -43,16 +45,26 @@ export class ModalRouterController {
  * @param routes follow named router outlet, routes sintax, if is not provided an initialNavigation, the first route is loaded on presenting
  * @param [outletName] must be unique in all router
  * @param [initialNavigation] Warning: extra are not scooped to this secondary router
+ * @param [cssClass] a list of class to add to the modal
  * @returns HTMLIonModalElement ready to be presented 
  */
-private createWithRoutes : CreateModalRouter = async ({routes, outletName = this.defaultRouterName, initialNavigation = undefined} : ModalRouterOptions) : Promise<HTMLIonModalElement> => {
+private createWithRoutes = async ({
+  routes, 
+  outletName = this.defaultRouterName, 
+  initialNavigation = undefined, 
+  cssClass = [],
+  showBackdrop = false,
+  backdropDismiss = false
+} : ModalRouterOptions) : Promise<HTMLIonModalElement> => {
     if(this.modals.has(outletName)) throw("modal-router with same name already exists");
     if(this.routesWithOutletNameExists(outletName,this.router.config)) throw("outlet name already exists in some routes");
     this.modals.set(outletName,undefined);
     this.addRoutes(routes,outletName);
     return this.modalCtrl.create({
-      component:RouterComponent,
-      cssClass:["modal-router"],
+      component: ModalRouterComponent,
+      cssClass: cssClass,
+      showBackdrop: showBackdrop,
+      backdropDismiss: backdropDismiss,
       componentProps:{
         name: outletName,
         routes: routes,
@@ -81,15 +93,24 @@ private createWithRoutes : CreateModalRouter = async ({routes, outletName = this
  * Creates modal router controller
  * @param [outletName] must be unique in all router
  * @param [initialNavigation] Warning: extra are not scooped to this secondary router
+ * @param [cssClass] a list of class to add to the modal
  * @returns HTMLIonModalElement ready to be presented 
  */
-  private createWithoutRoutes : CreateModalRouter = async ({routes ,outletName = this.defaultRouterName, initialNavigation = undefined} : ModalRouterOptions) : Promise<HTMLIonModalElement> => {
+  private createWithoutRoutes = async ({
+    outletName = this.defaultRouterName, 
+    initialNavigation = undefined, 
+    cssClass = [],
+    showBackdrop = false,
+    backdropDismiss = false
+  } : ModalRouterOptions) : Promise<HTMLIonModalElement> => {
     if(this.modals.has(outletName)) throw("modal-router with same name already exists");
     if(!initialNavigation) throw("initialNavigation must be provided if no routes are provided");
     this.modals.set(outletName,undefined);
     return this.modalCtrl.create({
-      component:RouterComponent,
-      cssClass:["modal-router"],
+      component: ModalRouterComponent,
+      cssClass: cssClass,
+      showBackdrop: showBackdrop,
+      backdropDismiss: backdropDismiss,
       componentProps:{
         name: outletName,
         initialNavigation: initialNavigation

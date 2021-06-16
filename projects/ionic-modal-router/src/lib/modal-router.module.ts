@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ModalRouterController } from './modal-router.service';
 import { RouterModule } from '@angular/router';
-import { RouterComponent } from './router/router.component';
-import { CompileDirective } from './router/compile.directive';
+import { ModalRouterComponent } from './router/modal-router.component';
+import { NamedRouterDirective } from './router/named-router.directive';
 
 @NgModule({
   declarations: [
-    RouterComponent,
-    CompileDirective
+    ModalRouterComponent,
+    NamedRouterDirective
   ],
   imports: [
     CommonModule,
@@ -21,7 +21,7 @@ export class ModalRouterModule {
   static forRoot(): ModuleWithProviders<ModalRouterModule> {
     return {
       ngModule: ModalRouterModule,
-      providers:[ ModalRouterController ]
+      providers:[ ModalRouterController]
     };
   }
 }

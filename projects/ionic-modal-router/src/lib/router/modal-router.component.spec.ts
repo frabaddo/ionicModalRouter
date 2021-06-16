@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { RouterComponent } from './router.component';
+import { ModalRouterComponent } from './modal-router.component';
 
 describe('RouterComponent', () => {
-  let component: RouterComponent;
-  let fixture: ComponentFixture<RouterComponent>;
+  let component: ModalRouterComponent;
+  let fixture: ComponentFixture<ModalRouterComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouterComponent ],
+      declarations: [ ModalRouterComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RouterComponent);
+    fixture = TestBed.createComponent(ModalRouterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
