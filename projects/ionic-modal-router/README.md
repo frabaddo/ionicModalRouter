@@ -1,24 +1,102 @@
-# IonicModalRouter
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.
+# ionic-modal-router
 
-## Code scaffolding
+ionic-modal-router is a Ionic/Angular library for create modal with nested router.
 
-Run `ng generate component component-name --project ionicModalRouter` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ionicModalRouter`.
-> Note: Don't forget to add `--project ionicModalRouter` or else it will be added to the default project in your `angular.json` file. 
+## Installation
 
-## Build
+```bash
+npm install ionic-modal-router
+```
 
-Run `ng build ionicModalRouter` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Required Dependency
+```bash
+angular >= 10.0.0
+ionic >= 5.0.0
+```
 
-## Publishing
+## Add to modules
 
-After building your library with `ng build ionicModalRouter`, go to the dist folder `cd dist/ionic-modal-router` and run `npm publish`.
+in app.module.ts
+```typescript
+@NgModule({
+  ...
+  imports: [
+    ... 
+    ModalRouterModule.forRoot()
+  ],
+  ...
+})
+export class AppModule { }
+```
 
-## Running unit tests
+in other module
+```typescript
+@NgModule({
+  ...
+  imports: [
+    ... 
+    ModalRouterModule
+  ],
+  ...
+})
+export class AppModule { }
+```
 
-Run `ng test ionicModalRouter` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Usage
 
-## Further help
+in your component
+```typescript
+import { ModalRouterController } from "ionic-modal-router"
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+...
+
+constructor(
+    private modalRouterController: ModalRouterController
+ ) { }
+
+...
+
+openModal(){
+  this.modalRouterController.create({
+    outletName:"test",
+    routes:[{
+      path:"default",
+      loadChildren: () => import('../feature/feature.module').then( m => m.FeaturePageModule)
+    }]
+  }).then((modal)=>{
+    modal.present()
+  })
+}
+
+```
+
+## Methods
+
+```
+create( opts : ModalRouterOptions ) => Promise<HTMLIonModalElement>
+
+get( nameOfTheOutlet : string ) => HTMLIonModalElement | undefined
+
+getTop() => { name:string, ref:HTMLIonModalElement }
+
+dismiss(name : string | undefined) => Promise<boolean> #dismiss the top modal ore the modal with given name
+
+navigate (commands: any[], extras?: NavigationExtras, nameOfTheOutlet?:string) => Promise<boolean>;
+```
+
+## Types
+
+```
+# ModalRouterOptions 
+{
+  routes? : any[]; # a list of routes to load inside modal, if omitted is retrieved from already loaded routes, with outle outletName
+  outletName? : string; # use for multi parallel modal; required if no routes are passed
+  cssClass?: string | string[],
+  showBackdrop?:boolean,
+  backdropDismiss?:boolean,
+  initialNavigation? : [commands: any[], extras?: NavigationExtras] # default first route in routes
+}
+```
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
