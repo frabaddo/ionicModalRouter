@@ -61,8 +61,9 @@ export class NamedRouterDirective implements OnInit, OnDestroy {
   }
 
   private createProvidersDynamicModule () {
+    var value = this.namedRouter
     @NgModule({
-      providers:[{provide: OUTLET_NAME,useValue:this.namedRouter}]
+      providers:[{provide: OUTLET_NAME,useValue:value}]
     })
     class DynamicProvideModule {}
     return DynamicProvideModule;
