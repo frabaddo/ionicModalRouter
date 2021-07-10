@@ -57,7 +57,8 @@ export class NamedRouterDirective implements OnInit, OnDestroy {
       declarations: [CustomDynamicComponent]
     })
     class DynamicModule {}
-    return DynamicModule;
+    let module = DynamicModule;
+    return module;
   }
 
   private createProvidersDynamicModule () {
@@ -66,6 +67,7 @@ export class NamedRouterDirective implements OnInit, OnDestroy {
       providers:[{provide: OUTLET_NAME,useValue:value}]
     })
     class DynamicProvideModule {}
-    return DynamicProvideModule;
+    let module = DynamicProvideModule;
+    return module;
   }
 }
